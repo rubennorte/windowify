@@ -1,0 +1,56 @@
+{
+  "name": "windowify",
+  "version": "0.1.0",
+  "author": "Rubén Norte <rubennorte@gmail.com>",
+  "description": "Allows regular JavaScript files to expose global variables and functions when bundled with Browserify",
+  "license": "MIT",
+  "main": "src/index.js",
+  "keywords": [
+    "browserify",
+    "browserify-transform",
+    "expose",
+    "closure",
+    "scope",
+    "global",
+    "globals",
+    "transform",
+    "window"
+  ],
+  "homepage": "https://github.com/rubennorte/windowify",
+  "bugs": {
+    "url": "https://github.com/rubennorte/windowify/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rubennorte/windowify.git"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "lint:errors": "jshint src test --reporter node_modules/jshint-stylish/stylish.js --verbose",
+    "lint:style": "jscs src test --verbose",
+    "lint": "npm run lint:errors && npm run lint:style",
+    "jasmine": "node test/launch-unit.js",
+    "pretest": "npm run lint",
+    "test": "npm run jasmine",
+    "prepare-release": "npm test",
+    "release": "mversion -m \"New version: %s\"",
+    "doc:js": "jsdoc src --destination doc/js --readme README.md --verbose",
+    "doc": "npm run doc:js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "jasmine": "^2.3.1",
+    "jasmine-spec-reporter": "^2.2.3",
+    "jscs": "^1.12.0",
+    "jsdoc": "^3.3.0-beta3",
+    "jshint": "^2.8.0",
+    "jshint-stylish": "^1.0.1",
+    "mversion": "^1.10.0"
+  },
+  "engines": {
+    "node": ">=0.10.0",
+    "npm": ">=2.0.0"
+  }
+}
