@@ -4,17 +4,17 @@ Allows regular JavaScript files to expose global variables and functions when bu
 
 We can find old code written this way:
 
-jquery.js:
-```javascript
-function jQuery(selector) {
-  /* ... */
-}
-```
+* jquery.js:
+  ```javascript
+  function jQuery(selector) {
+    /* ... */
+  }
+  ```
 
-test.js
-```javascript
-var $element = jQuery('#some-element');
-```
+* test.js:
+  ```javascript
+  var $element = jQuery('#some-element');
+  ```
 
 When we bundle the file with the `jQuery` definition, we loose the global reference to jQuery because it is no longer declared in the top level scope:
 
@@ -22,20 +22,21 @@ When we bundle the file with the `jQuery` definition, we loose the global refere
 browserify jquery.js -o jquery.bundled.js
 ```
 
-jquery.bundled.js:
-```javascript
-/* PREAMBLE */
-})({
-  1: [
-    function(require, module, exports) {
-      // jQuery is not global now!
-      function jQuery(selector) {
-        /* ... */
-      }
-    }, {}
-  ]
-}, {}, [1]);
-```
+* jquery.bundled.js:
+
+  ```javascript
+  /* PREAMBLE */
+  })({
+    1: [
+      function(require, module, exports) {
+        // jQuery is not global now!
+        function jQuery(selector) {
+          /* ... */
+        }
+      }, {}
+    ]
+  }, {}, [1]);
+  ```
 
 This module transforms those files exposing those variables to window:
 
@@ -43,23 +44,24 @@ This module transforms those files exposing those variables to window:
 browserify jquery.js -t windowify -o jquery.bundled.js
 ```
 
-jquery.bundled.js:
-```javascript
-/* PREAMBLE */
-})({
-  1: [
-    function(require, module, exports) {
-      (function(window) {
-      function jQuery(selector) {
-        /* ... */
-      }
-      // jQuery is global again!
-      window.jQuery = exports.jQuery = jQuery;
-      }).call(window, window);
-    }, {}
-  ]
-}, {}, [1]);
-```
+* jquery.bundled.js:
+
+  ```javascript
+  /* PREAMBLE */
+  })({
+    1: [
+      function(require, module, exports) {
+        (function(window) {
+        function jQuery(selector) {
+          /* ... */
+        }
+        // jQuery is global again!
+        window.jQuery = exports.jQuery = jQuery;
+        }).call(window, window);
+      }, {}
+    ]
+  }, {}, [1]);
+  ```
 
 It also sets `window` as the context of the code (for code setting global variables to `this`).
 
@@ -76,11 +78,13 @@ Like any other browserify transform, you can use in 3 ways:
 * Adding the configuration to the `package.json`:
 
 ```json
+{
   "browserify": {
     "transform": [
       ["windowify", ["**/jquery.js"]]
     ]
   }
+}
 ```
 
 * Command-line usage:
