@@ -2,6 +2,67 @@
 
 Allows regular JavaScript files to expose global variables and functions when bundled with Browserify.
 
+We can find old code written this way:
+
+jquery.js:
+```javascript
+function jQuery(selector) {
+  /* ... */
+}
+```
+
+test.js
+```javascript
+var $element = jQuery('#some-element');
+```
+
+When we bundle the file with the `jQuery` definition, we loose the global reference to jQuery because it is no longer declared in the top level scope:
+
+```bash
+browserify jquery.js -o jquery.bundled.js
+```
+
+jquery.bundled.js:
+```javascript
+/* PREAMBLE */
+})({
+  1: [
+    function(require, module, exports) {
+      // jQuery is not global now!
+      function jQuery(selector) {
+        /* ... */
+      }
+    }, {}
+  ]
+}, {}, [1]);
+```
+
+This module transforms those files exposing those variables to window:
+
+```bash
+browserify jquery.js -t windowify -o jquery.bundled.js
+```
+
+jquery.bundled.js:
+```javascript
+/* PREAMBLE */
+})({
+  1: [
+    function(require, module, exports) {
+      (function(window) {
+      function jQuery(selector) {
+        /* ... */
+      }
+      // jQuery is global again!
+      window.jQuery = exports.jQuery = jQuery;
+      }).call(window, window);
+    }, {}
+  ]
+}, {}, [1]);
+```
+
+It also sets `window` as the context of the code (for code setting global variables to `this`).
+
 ## Installation
 
 ```bash
@@ -10,20 +71,29 @@ npm install windowify --save-dev
 
 ## Usage
 
-## Documentation
+Like any other browserify transform, you can use in 3 ways:
 
-To generate the code documentation of the project:
+* Adding the configuration to the `package.json`:
 
-```bash
-npm run doc
+```json
+  "browserify": {
+    "transform": [
+      ["windowify", ["**/jquery.js"]]
+    ]
+  }
 ```
 
-## Tests
-
-To run the tests of the project, clone the repository and execute:
+* Command-line usage:
 
 ```bash
-npm install && npm test
+browserify entry-point.js -t [ windowify **/jquery.js ] -o entry-point.bundle.js
+```
+
+* Programmatic usage:
+
+```javascript
+var b = browserify('entry-point.js');
+b.transform('windowify', ['**/jquery.js']);
 ```
 
 ## Contribute

@@ -39,7 +39,13 @@
     "doc:js": "jsdoc src --destination doc/js --readme README.md --verbose",
     "doc": "npm run doc:js"
   },
-  "dependencies": {},
+  "dependencies": {
+    "esprima": "^2.2.0",
+    "estraverse": "^4.1.0",
+    "minimatch": "^2.0.8",
+    "through": "^2.3.7",
+    "transformify": "^0.1.2"
+  },
   "devDependencies": {
     "jasmine": "^2.3.1",
     "jasmine-spec-reporter": "^2.2.3",
