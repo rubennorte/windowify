@@ -5,10 +5,10 @@ var tlsDeclarations = require('./tls-declarations');
 function wrapInClosure(code) {
   return '(function(window) {\n' +
     code +
-    '\n}).call(window, window);'
+    '\n}).call(window, window);';
 }
 
-module.exports = function(contents) {
+function windowify(contents) {
   var globalNames = tlsDeclarations.getNames(contents);
   if (globalNames.length > 0) {
     contents += '\n' + globalNames.map(function(name) {
@@ -16,4 +16,6 @@ module.exports = function(contents) {
     }).join('\n');
   }
   return wrapInClosure(contents);
-};
+}
+
+module.exports = windowify;

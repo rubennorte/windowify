@@ -1,3 +1,4 @@
+'use strict';
 
 var transformify = require('transformify');
 var through = require('through');
@@ -11,7 +12,7 @@ function processFile(file, filesToProcess) {
   });
 }
 
-module.exports = function(file, options) {
+function handleFile(file, options) {
   var filesToProcess;
   if (options instanceof Array) {
     filesToProcess = options;
@@ -24,4 +25,6 @@ module.exports = function(file, options) {
   } else {
     return through();
   }
-};
+}
+
+module.exports = handleFile;

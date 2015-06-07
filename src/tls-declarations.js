@@ -1,3 +1,5 @@
+'use strict';
+
 var esprima = require('esprima');
 var estraverse = require('estraverse');
 
@@ -8,7 +10,7 @@ var TopLevelScopeDeclarations = {
     var names = [];
 
     estraverse.traverse(ast, {
-      enter: function(node, parent) {
+      enter: function(node) {
         if (node.type === 'FunctionDeclaration') {
           names.push(node.id.name);
         }
@@ -16,7 +18,7 @@ var TopLevelScopeDeclarations = {
           return estraverse.VisitorOption.Skip;
         }
       },
-      leave: function(node, parent) {
+      leave: function(node) {
         if (node.type === 'VariableDeclarator') {
           names.push(node.id.name);
         }
