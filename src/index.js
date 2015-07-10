@@ -18,7 +18,7 @@ function handleFile(file, options) {
     filesToProcess = options;
   } else {
     options = options || {};
-    filesToProcess = options._ || [];
+    filesToProcess = options._ || ['**/*'];
   }
   if (processFile(file, filesToProcess)) {
     return transformify(windowify)(file);
