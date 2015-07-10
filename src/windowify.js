@@ -40,9 +40,12 @@ function noWrap(code) {
  * wrapping the code inside a IIFE if so or if it uses "this" at the top
  * level scope
  * @param  {string} code
+ * @param {Object} [options]
+ * @param {string} [options.file]
+ * @param {Logger} [options.logger]
  * @return {string}
  */
-function windowify(code) {
+function windowify(code, options) {
   var ast = esprima.parse(code);
 
   var globalNames = tls.getDeclaredNames(ast);
@@ -61,6 +64,19 @@ function windowify(code) {
     wrapper = wrapWithIIFE;
   } else {
     wrapper = noWrap;
+  }
+
+  var message;
+  var logger = options && options.logger;
+  if (logger && (definesTLSVars || usesThis)) {
+    message = 'windowify ' + options.file + ':\n';
+    if (definesTLSVars) {
+      message += '\tvariables: ' + globalNames.join(', ') + '\n';
+    }
+    if (usesThis) {
+      message += '\tuses this in top-level scope\n';
+    }
+    logger.log(message);
   }
 
   return wrapper(code);

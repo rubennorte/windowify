@@ -6,10 +6,16 @@ var minimatch = require('minimatch');
 
 var windowify = require('./windowify');
 
-function processFile(file, filesToProcess) {
+function fileNeedsProcess(file, filesToProcess) {
   return filesToProcess.some(function(fileToProcess) {
     return minimatch(file, fileToProcess);
   });
+}
+
+function applyWindowifyOptions(options) {
+  return function(code) {
+    return windowify(code, options);
+  };
 }
 
 function handleFile(file, options) {
@@ -20,8 +26,14 @@ function handleFile(file, options) {
     options = options || {};
     filesToProcess = options._ || ['**/*'];
   }
-  if (processFile(file, filesToProcess)) {
-    return transformify(windowify)(file);
+
+  var windowifyOptions = {
+    file: file,
+    logger: options.debug ? console : null
+  };
+
+  if (fileNeedsProcess(file, filesToProcess)) {
+    return transformify(applyWindowifyOptions(windowifyOptions))(file);
   } else {
     return through();
   }
