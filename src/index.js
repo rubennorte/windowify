@@ -24,7 +24,7 @@ function handleFile(file, options) {
     filesToProcess = options;
   } else {
     options = options || {};
-    filesToProcess = options._ || ['**/*'];
+    filesToProcess = options.files || options._ || ['**/*'];
   }
 
   var windowifyOptions = {

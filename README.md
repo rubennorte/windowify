@@ -81,7 +81,7 @@ Like any other browserify transform, you can use in 3 ways:
 {
   "browserify": {
     "transform": [
-      ["windowify", ["**/jquery.js"]]
+      ["windowify", {"files": "**/jquery.js", "debug": true}]
     ]
   }
 }
@@ -90,19 +90,19 @@ Like any other browserify transform, you can use in 3 ways:
 * Command-line usage:
 
 ```bash
-browserify entry-point.js -t [ windowify **/jquery.js ] -o entry-point.bundle.js
+browserify entry-point.js -t [ windowify **/jquery.js --debug ] -o entry-point.bundle.js
 ```
 
 * Programmatic usage:
 
 ```javascript
 var b = browserify('entry-point.js');
-b.transform('windowify', ['**/jquery.js']);
+b.transform('windowify', {files: '**/jquery.js', debug: true}]);
 ```
 
 ## Contribute
 
-1. Fork it: `git clone https://github.com/rubennorte/blister.git`
+1. Fork it: `git clone https://github.com/rubennorte/windowify.git`
 2. Create your feature branch: `git checkout -b my-new-feature`
 3. Commit your changes: `git commit -am 'Add some feature'`
 4. Check the build: `npm run build`
